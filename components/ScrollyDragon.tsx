@@ -28,7 +28,7 @@ export default function ScrollyDragon() {
 
     useEffect(() => {
         // Minimum loading time
-        const timer = setTimeout(() => setMinTimeElapsed(true), 3000);
+        const timer = setTimeout(() => setMinTimeElapsed(true), 1500);
 
         // Preload images
         let loadedCount = 0;
@@ -66,10 +66,6 @@ export default function ScrollyDragon() {
         const ctx = canvas.getContext("2d");
         if (!ctx) return;
 
-        // Set canvas dimensions
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-
         const img = images[index];
 
         // object-fit: cover logic within canvas
@@ -96,6 +92,9 @@ export default function ScrollyDragon() {
 
     useEffect(() => {
         if (loaded && canvasRef.current) {
+            // Set canvas dimensions once or on resize
+            canvasRef.current.width = window.innerWidth;
+            canvasRef.current.height = window.innerHeight;
             renderFrame(0);
         }
     }, [loaded]);
@@ -129,7 +128,9 @@ export default function ScrollyDragon() {
 
     useEffect(() => {
         const handleResize = () => {
-            if (loaded) {
+            if (loaded && canvasRef.current) {
+                canvasRef.current.width = window.innerWidth;
+                canvasRef.current.height = window.innerHeight;
                 requestAnimationFrame(() => renderFrame(Math.min(Math.floor(frameIndex.get()), FRAME_COUNT - 1)));
             }
         };

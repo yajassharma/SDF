@@ -17,7 +17,7 @@ export default function DownloadSection() {
     return (
         <section className="py-32 px-4 md:px-8 max-w-7xl mx-auto relative z-20">
             <div className="flex flex-col md:flex-row items-center justify-between gap-16">
-                <div className="w-full md:w-1/2 relative flex justify-center perspective-[1000px]">
+                <div className="w-full md:w-1/2 relative flex justify-center perspective-[1000px] overflow-hidden">
                     <div className="relative w-64 h-[500px] z-20 group">
                         {/* Phone Mockup Placeholder */}
                         <div className="absolute inset-0 bg-[#0a0a0a] border-[8px] border-[#222] rounded-[3rem] shadow-[0_0_50px_rgba(128,0,0,0.5)] overflow-hidden transform rotate-y-[-15deg] group-hover:rotate-y-[0deg] transition-transform duration-700">

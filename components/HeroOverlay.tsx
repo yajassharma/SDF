@@ -32,7 +32,7 @@ export default function HeroOverlay({ scrollYProgress }: HeroOverlayProps) {
                 <img
                     src="/hero-text.png"
                     alt="SDF Go LIVE"
-                    className="w-[200%] md:w-[100%] max-w-12xl -mb-10 md:-mb-20 opacity-90 drop-shadow-[0_0_30px_rgba(255,255,255,0.3)] transition-all"
+                    className="w-full md:w-[100%] max-w-12xl -mb-10 md:-mb-20 opacity-90 drop-shadow-[0_0_30px_rgba(255,255,255,0.3)] transition-all px-4"
                 />
 
                 <p className="max-w-small md:max-w-xl mx-auto mt-4 md:mt-0 text-base md:text-xl text-white/90 leading-relaxed font-sans px-4" style={{ fontFamily: "var(--font-lato), sans-serif" }}>
