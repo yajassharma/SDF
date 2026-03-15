@@ -67,35 +67,43 @@ export default function ScrollyDragon() {
         if (!ctx) return;
 
         const img = images[index];
+        const ratio = window.devicePixelRatio || 1;
 
         // object-fit: cover logic within canvas
         const imgRatio = img.width / img.height;
-        const canvasRatio = canvas.width / canvas.height;
+        const canvasRatio = (canvas.width / ratio) / (canvas.height / ratio);
 
         let drawWidth, drawHeight, offsetX, offsetY;
 
         if (canvasRatio > imgRatio) {
-            drawWidth = canvas.width;
-            drawHeight = canvas.width / imgRatio;
+            drawWidth = canvas.width / ratio;
+            drawHeight = (canvas.width / ratio) / imgRatio;
             offsetX = 0;
-            offsetY = (canvas.height - drawHeight) / 2;
+            offsetY = (canvas.height / ratio - drawHeight) / 2;
         } else {
-            drawWidth = canvas.height * imgRatio;
-            drawHeight = canvas.height;
-            offsetX = (canvas.width - drawWidth) / 2;
+            drawWidth = (canvas.height / ratio) * imgRatio;
+            drawHeight = canvas.height / ratio;
+            offsetX = (canvas.width / ratio - drawWidth) / 2;
             offsetY = 0;
         }
 
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.clearRect(0, 0, canvas.width / ratio, canvas.height / ratio);
         ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
     };
 
     useEffect(() => {
         if (loaded && canvasRef.current) {
-            // Set canvas dimensions once or on resize
-            canvasRef.current.width = window.innerWidth;
-            canvasRef.current.height = window.innerHeight;
-            renderFrame(0);
+            const canvas = canvasRef.current;
+            const ctx = canvas.getContext("2d");
+            if (ctx) {
+                const ratio = window.devicePixelRatio || 1;
+                canvas.width = window.innerWidth * ratio;
+                canvas.height = window.innerHeight * ratio;
+                canvas.style.width = `${window.innerWidth}px`;
+                canvas.style.height = `${window.innerHeight}px`;
+                ctx.scale(ratio, ratio);
+                renderFrame(0);
+            }
         }
     }, [loaded]);
 
@@ -129,9 +137,17 @@ export default function ScrollyDragon() {
     useEffect(() => {
         const handleResize = () => {
             if (loaded && canvasRef.current) {
-                canvasRef.current.width = window.innerWidth;
-                canvasRef.current.height = window.innerHeight;
-                requestAnimationFrame(() => renderFrame(Math.min(Math.floor(frameIndex.get()), FRAME_COUNT - 1)));
+                const canvas = canvasRef.current;
+                const ctx = canvas.getContext("2d");
+                if (ctx) {
+                    const ratio = window.devicePixelRatio || 1;
+                    canvas.width = window.innerWidth * ratio;
+                    canvas.height = window.innerHeight * ratio;
+                    canvas.style.width = `${window.innerWidth}px`;
+                    canvas.style.height = `${window.innerHeight}px`;
+                    ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+                    requestAnimationFrame(() => renderFrame(Math.min(Math.floor(frameIndex.get()), FRAME_COUNT - 1)));
+                }
             }
         };
         window.addEventListener("resize", handleResize);
@@ -140,7 +156,7 @@ export default function ScrollyDragon() {
 
     return (
         <section ref={containerRef} className="h-[600vh] w-full relative bg-[var(--background)]">
-            <div className="sticky top-0 h-screen w-full bg-black overflow-hidden">
+            <div className="sticky top-0 h-[100dvh] w-full bg-black overflow-hidden">
                 {!loaded && (
                     <div className="absolute inset-0 flex flex-col items-center justify-center z-[200] bg-[#050505] overflow-hidden">
                         {/* Futuristic HUD Corners */}
